@@ -1,0 +1,15 @@
+allow:
+  - python
+  - python3
+  - bash
+  - sh
+  - cat
+  - echo
+  - printf
+deny_patterns:
+  - "rm\\s+-rf\\s+/"
+  - ":\\(\\)\\s*\\{\\s*:\\s*\\|\\s*:\\s*&\\s*\\};\\s*:"   # fork bomb
+env_allowlist:
+  - PYTHONUNBUFFERED
+working_subdir: ""
+

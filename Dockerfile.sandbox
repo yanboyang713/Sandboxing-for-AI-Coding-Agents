@@ -1,0 +1,19 @@
+# Small, reproducible Python runner with a non-root user.
+FROM python:3.12-slim
+
+# Create a non-root user (uid:1000 gid:1000) that matches host-side default
+RUN groupadd -g 1000 sandbox && useradd -u 1000 -g 1000 -m -s /bin/bash sandbox
+
+# Minimal build tools if you later add wheels (comment out if not needed)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates bash coreutils tini && \
+    rm -rf /var/lib/apt/lists/*
+
+# Working directory inside container; host workspace bind-mounts here.
+WORKDIR /app
+
+# Default runtime: drop to a shell; manager will override with command.
+USER 1000:1000
+ENTRYPOINT ["/usr/bin/tini","--"]
+CMD ["bash","-lc","sleep infinity"]
+
